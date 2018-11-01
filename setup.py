@@ -353,10 +353,9 @@ licensed under LGPL (see the LICENSE.txt file included in the
 distribution).
 """
 
-forked_package_name = 'suds-community'
-package_name = os.environ.get('SUDS_PACKAGE', forked_package_name)
+package_name = "suds-ableton"
 version_tag = safe_version(__version__)
-project_url = "https://github.com/suds-community/suds"
+project_url = "https://github.com/AbletonAG/suds-ableton"
 base_download_url = project_url + "/archive"
 download_distribution_name = "release-%s.tar.gz" % (version_tag)
 download_url = "%s/%s" % (base_download_url, download_distribution_name)
