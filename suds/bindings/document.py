@@ -98,9 +98,10 @@ class Document(Binding):
         return root
 
     def replycontent(self, method, body):
-        if method.soap.output.body.wrapped and body and body[0]:
+        wrapped = method.soap.output.body.wrapped
+        if wrapped and body and body[0]:
             return body[0].children
-        elif method.soap.output.body.wrapped:
+        elif wrapped:
             return []
         return body.children
 
