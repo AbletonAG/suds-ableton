@@ -244,6 +244,12 @@ def test_invalid_fault_namespace(monkeypatch):
         assert reason == "trla baba lan"
 
 
+def test_empty_list_result_response():
+    client = testutils.client_from_wsdl(_complex_sample_wsdl)
+
+    response = client.service.read_result(__inject=dict(reply=_empty_reply))
+
+
 def test_missing_wrapper_response():
     """
     Suds library's automatic structure unwrapping should not be applied to
@@ -545,3 +551,67 @@ _wsdl__simple_f = testutils.wsdl("""\
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>""", output="fResponse", operation_name="f")
+
+_complex_sample_wsdl = testutils.wsdl("""\
+      <xsd:element name="Read_Result">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="Customer" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+""", output="Read_Result", operation_name="read_result")
+
+_complex_sample_wsdl_2 = testutils.wsdl("""\
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:microsoft-dynamics-schemas/page/customer" targetNamespace="my-xsd-namespace">
+  <types>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="my-xsd-namespace">
+      <xsd:element name="Read">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="No" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Read_Result">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="Customer" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </types>
+  <message name="Read_Result">
+    <part name="parameters" element="tns:Read_Result"/>
+  </message>
+  <portType name="Customer_Port">
+    <operation name="Read">
+      <input name="Read" message="tns:Read"/>
+      <output name="Read_Result" message="tns:Read_Result"/>
+    </operation>
+  </portType>
+  <binding name="Customer_Binding" type="tns:Customer_Port">
+    <binding xmlns="http://schemas.xmlsoap.org/wsdl/soap/" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="Read">
+      <operation xmlns="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="urn:microsoft-dynamics-schemas/page/customer:Read" style="document"/>
+      <input name="Read">
+        <body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="literal"/>
+      </input>
+      <output name="Read_Result">
+        <body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="Customer_Service">
+    <port name="Customer_Port" binding="tns:Customer_Binding">
+      <address xmlns="http://schemas.xmlsoap.org/wsdl/soap/" location="https://localhost:8000/Page/Customer"/>
+    </port>
+  </service>
+</definitions>""", output="Read_Result", operation_name="read_result")
+
+_empty_reply = suds.byte_str("""\
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+  <env:Body/>
+</env:Envelope>""")
