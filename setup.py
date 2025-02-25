@@ -353,7 +353,7 @@ licensed under LGPL (see the LICENSE.txt file included in the
 distribution).
 """
 
-package_name = "suds-ableton"
+forked_package_name = package_name = "suds-ableton"
 version_tag = safe_version(__version__)
 project_url = "https://github.com/AbletonAG/suds-ableton"
 base_download_url = project_url + "/archive"
