@@ -22,5 +22,5 @@ See the setup.py script for more detailed information.
 
 """
 
-__version__ = "1.2.0"
+__version__ = "1.2.0+ablfix02"
 __build__ = ""
